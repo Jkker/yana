@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   ChakraProvider,
   Tab,
   TabList,
@@ -7,6 +8,7 @@ import {
   TabPanels,
   Tabs,
   useDisclosure,
+  useTheme,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { render } from 'react-dom'
@@ -17,7 +19,7 @@ import './index.css'
 import About from './pages/About'
 import Calender from './pages/Calender'
 import List from './pages/List'
-import { useTheme } from '@chakra-ui/react'
+import { PhoneIcon, AddIcon, WarningIcon } from '@chakra-ui/icons'
 
 const Popup = () => {
   const [list, setList, isPersistent, error] = useClassList()
@@ -28,29 +30,30 @@ const Popup = () => {
   const deleteClass = (c) => {
     setList((prevList) => prevList.filter((e) => c.id !== e.id))
   }
-
+  const addClass = () =>
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const currId = tabs[0].url.split('/').slice(-1)[0]
+      console.log('🚀 ~ file: index.jsx ~ line 37 ~ currId', currId)
+      for (let c in list) {
+        if (c.id === currId) {
+          return
+        }
+      }
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { action: 'getClassInfo' },
+        (response) => {
+          if (response.success) {
+            setTempClass(createEvents(response.classInfo, colors))
+            onOpen()
+          }
+        }
+      )
+    })
   // Get Class Info from Content Script
   useEffect(() => {
     window.onload = () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        const currId = tabs[0].url.split('/').slice(-1)[0]
-        console.log("🚀 ~ file: index.jsx ~ line 37 ~ currId", currId)
-        for (let c in list) {
-          if (c.id === currId) {
-            return
-          }
-        }
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { action: 'getClassInfo' },
-          (response) => {
-            if (response.success) {
-              setTempClass(createEvents(response.classInfo, colors))
-              onOpen()
-            }
-          }
-        )
-      })
+      addClass()
     }
   }, [onOpen])
 
@@ -62,6 +65,9 @@ const Popup = () => {
           <Tab>Calender</Tab>
           <Tab>Map</Tab>
           <Tab>About</Tab>
+          <Button onClick={addClass}>
+            <AddIcon />
+          </Button>
         </TabList>
         <TabPanels>
           <TabPanel p={0} overflowX="scroll">

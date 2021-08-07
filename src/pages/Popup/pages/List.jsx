@@ -15,18 +15,20 @@ import {
   Link,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useSortBy, useTable } from 'react-table'
+import { useSortBy, useTable, useBlockLayout } from 'react-table'
+import { useSticky } from 'react-table-sticky'
 
 export default function ClassList({ list, setList, deleteClass }) {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Catalog #',
-        accessor: 'catalogNumber',
-      },
-      {
         Header: 'Title',
         accessor: 'title',
+        sticky: 'left',
+      },
+      {
+        Header: 'Catalog #',
+        accessor: 'catalogNumber',
       },
       {
         Header: 'Class #',
@@ -56,10 +58,14 @@ export default function ClassList({ list, setList, deleteClass }) {
     [list]
   )
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy)
+    useTable({ columns, data }, useSortBy, useBlockLayout, useSticky)
 
   return (
-    <Table {...getTableProps()}>
+    <Table
+      {...getTableProps()}
+      size="sm"
+      sx={{ '[data-sticky-td="true"]': { background: 'white', shadow: 'lg' } }}
+    >
       <Thead>
         {headerGroups.map((headerGroup) => (
           <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -92,9 +98,16 @@ export default function ClassList({ list, setList, deleteClass }) {
           return (
             <Tr {...row.getRowProps()}>
               {row.cells.map((cell) => (
-                <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                <Td lineHeight={5} {...cell.getCellProps()}>
+                  {cell.render('Cell')}
+                </Td>
               ))}
-              <Td gridGap={2} display="grid" sx={{ placeItems: 'center' }}>
+              <Td
+                lineHeight={5}
+                gridGap={2}
+                display="grid"
+                sx={{ placeItems: 'center' }}
+              >
                 <Button
                   colorScheme="red"
                   onClick={() => deleteClass(list[idx])}
