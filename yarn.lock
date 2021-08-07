@@ -7977,6 +7977,11 @@ use-callback-ref@^1.2.1, use-callback-ref@^1.2.3:
   resolved "https://registry.npm.taobao.org/use-callback-ref/download/use-callback-ref-1.2.5.tgz#6115ed242cfbaed5915499c0a9842ca2912f38a5"
   integrity sha1-YRXtJCz7rtWRVJnAqYQsopEvOKU=
 
+use-chrome-storage@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.nlark.com/use-chrome-storage/download/use-chrome-storage-1.0.4.tgz#24c67905dfdde8b6db029b30f420afcf1aa10ccb"
+  integrity sha1-JMZ5Bd/d6LbbApsw9CCvzxqhDMs=
+
 use-sidecar@^1.0.1:
   version "1.0.5"
   resolved "https://registry.npm.taobao.org/use-sidecar/download/use-sidecar-1.0.5.tgz#ffff2a17c1df42e348624b699ba6e5c220527f2b"

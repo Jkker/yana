@@ -1,4 +1,4 @@
-import { LinkIcon } from '@chakra-ui/icons';
+import { LinkIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -14,32 +14,32 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import createClassSchedule from '../utils/createClassSchedule'
+} from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import createClassSchedule from '../../../utils/createClassSchedule'
 // import RMPSearch from './RMPSearch';
 
-export default function Course(props) {
-  const [classInfo, setClassInfo] = useState({});
-  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+export default function CourseDetails({ list, setList }) {
+  const [classInfo, setClassInfo] = useState({})
+  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true })
 
   const handleAdd = (event) => {
-    event.preventDefault();
-    chrome.storage.sync.get(['list'], function (result) {
-      if (!result.list) {
+    event.preventDefault()
+    setList((prev) => [...prev, classInfo])
+    /* chrome..sync.get(['list'], function (result) {
+      if (!resultstorage.list) {
         chrome.storage.sync.set({ list: [classInfo] }, function () {
-          console.log('List is set to ' + [classInfo]);
-        });
-      } else
-        chrome.storage.sync.set(
-          { list: [...result.list, classInfo] },
-          function () {
-            console.log('List is set to ' + [...result.list, classInfo]);
-          }
-        );
-    });
+          console.table(classInfo)
+        })
+      } else {
+        const newList = [...result.list, classInfo]
+        chrome.storage.sync.set({ list: newList }, function () {
+          console.table(newList)
+        })
+      }
+    }) */
     onClose()
-  };
+  }
   // Get Class Info from Content Script
   useEffect(() => {
     window.onload = () => {
@@ -48,16 +48,16 @@ export default function Course(props) {
           tabs[0].id,
           { action: 'getClassInfo' },
           function (response) {
-            console.log(response);
+          console.log("🚀 ~ file: Details.jsx ~ line 51 ~ response", response)
             if (response.success) {
-              createClassSchedule(response.classInfo);
-              setClassInfo(response.classInfo);
+              createClassSchedule(response.classInfo)
+              setClassInfo(response.classInfo)
             }
           }
-        );
-      });
-    };
-  }, []);
+        )
+      })
+    }
+  }, [])
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -105,12 +105,12 @@ export default function Course(props) {
         </ModalFooter>
       </ModalContent>
     </Modal>
-  );
+  )
 }
 
 function AddCourse(props) {
-  const [value, setValue] = React.useState('');
-  const handleChange = (event) => setValue(event.target.value);
+  const [value, setValue] = React.useState('')
+  const handleChange = (event) => setValue(event.target.value)
 
   return (
     <>
@@ -127,5 +127,5 @@ function AddCourse(props) {
         />
       </InputGroup>
     </>
-  );
+  )
 }

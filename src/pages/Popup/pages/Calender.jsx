@@ -1,21 +1,19 @@
-import React from 'react';
 import moment from 'moment'
-import BigCalendar,{ Calendar, Views } from 'react-big-calendar';
-import events from '../events';
-import * as dates from '../../src/utils/dates';
+import React from 'react'
+import BigCalendar, { Calendar, Views } from 'react-big-calendar'
+import * as dates from '../../src/utils/dates'
+import events from '../events'
 
 const localizer = BigCalendar.momentLocalizer(moment) // or globalizeLocalizer
 
-let allViews = Object.keys(Views).map((k) => Views[k]);
+let allViews = Object.keys(Views).map((k) => Views[k])
 
 const ColoredDateCellWrapper = ({ children }) =>
   React.cloneElement(React.Children.only(children), {
     style: {
       backgroundColor: 'lightblue',
     },
-  });
-
-
+  })
 
 export default function Calender(props) {
   return (
@@ -31,7 +29,5 @@ export default function Calender(props) {
       }}
       localizer={localizer}
     />
-  );
+  )
 }
-
-

@@ -29,7 +29,8 @@
     "react-dom": "^17.0.1",
     "react-hot-loader": "^4.13.0",
     "react-table": "^7.7.0",
-    "rrule": "^2.6.8"
+    "rrule": "^2.6.8",
+    "use-chrome-storage": "^1.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",

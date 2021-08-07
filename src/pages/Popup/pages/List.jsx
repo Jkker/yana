@@ -1,21 +1,25 @@
-import { Button, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import React from 'react';
+import { Button, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import React from 'react'
 
-export default function ClassList(props) {
-  const { list, setList, deleteClass } = props;
+const columns = [
+  'Catalog #',
+  'Title',
+  'Class #',
+  'Instructor(s)',
+  'Meets',
+  'Dates',
+  'Room',
+  'Operation',
+]
 
+export default function ClassList({ list, setList, deleteClass }) {
   return (
     <Table variant="simple" size="sm">
       <Thead>
         <Tr>
-          <Th>Catalog #</Th>
-          <Th>Title</Th>
-          <Th>Class #</Th>
-          <Th>Instructor(s)</Th>
-          <Th>Meets</Th>
-          <Th>Dates</Th>
-          <Th>Room</Th>
-          <Th>Operation</Th>
+          {columns.map((column, idx) => (
+            <Th key={`class-list-column-${idx}`}>{column}</Th>
+          ))}
         </Tr>
       </Thead>
       <Tbody>
@@ -37,5 +41,5 @@ export default function ClassList(props) {
         ))}
       </Tbody>
     </Table>
-  );
+  )
 }
