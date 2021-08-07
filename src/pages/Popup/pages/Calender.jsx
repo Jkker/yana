@@ -5,9 +5,14 @@ import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import React from 'react'
 import { createEvents, INPUT_TIME_ZONE } from '../../../utils/scheduleUtils'
+import { useTheme } from '@chakra-ui/react'
 
 export default function Calendar({ list }) {
-  const events = React.useMemo(() => list.map((c) => createEvents(c), [list]))
+  const { colors } = useTheme()
+  console.log('🚀 ~ file: Calender.jsx ~ line 12 ~ Calendar ~ theme', colors)
+  const events = React.useMemo(() =>
+    list.map((c) => createEvents(c, colors), [list])
+  )
   console.log('🚀 ~ file: Calender.jsx ~ line 12 ~ Calendar ~ events', events)
 
   return (
