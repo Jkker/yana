@@ -28,6 +28,7 @@
     "react-big-calendar": "^0.33.3",
     "react-dom": "^17.0.1",
     "react-hot-loader": "^4.13.0",
+    "react-table": "^7.7.0",
     "rrule": "^2.6.8"
   },
   "devDependencies": {
