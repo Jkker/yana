@@ -12,7 +12,7 @@ export const WEEK_DAYS = {
   Fr: 5,
   Sa: 6,
 }
-const colorArray = [
+const COLOR_LIST = [
   'red',
   'orange',
   'yellow',
@@ -24,7 +24,7 @@ const colorArray = [
   'pink',
 ]
 
-const mapIDtoColor = (id)=>colorArray[id%colorArray.length]
+const mapIDtoColor = (id) => COLOR_LIST[id % COLOR_LIST.length]
 
 export const parseDate = (date) => {
   const [m, d, y] = date.split('/')
@@ -36,11 +36,12 @@ export const parseTime = (time) =>
 export const parseWeekDays = (weekDays) =>
   weekDays.match(/.{1,2}/g).map((s) => WEEK_DAYS[s])
 
-export function createEvents({ title, Dates, Meets, ...restInfo }, colors) {
+export function createEvents(data, colors) {
   // eslint-disable-next-line no-unused-vars
+  const { title, Dates, Meets } = data
   const [daysOfWeek, startTime, _, endTime] = Meets.split(' ')
   const [startRecur, endRecur] = Dates.split(' - ').map(parseDate)
-  const ID = restInfo['Class Number']
+  const ID = data['Class Number']
   const color = mapIDtoColor(ID)
   const event = {
     title,
@@ -50,9 +51,9 @@ export function createEvents({ title, Dates, Meets, ...restInfo }, colors) {
     daysOfWeek: parseWeekDays(daysOfWeek),
     startTime: parseTime(startTime),
     endTime: parseTime(endTime),
-    backgroundColor: colors[color][400],
-    borderColor: colors[color][400],
+    color: colors[color][400],
     textColor: colors[color][50],
+    extendedProps: { color, ...data },
   }
   return event
 }

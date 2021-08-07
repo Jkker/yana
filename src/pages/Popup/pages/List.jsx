@@ -1,4 +1,8 @@
-import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
+import {
+  TriangleDownIcon,
+  TriangleUpIcon,
+  ExternalLinkIcon,
+} from '@chakra-ui/icons'
 import {
   Button,
   chakra,
@@ -8,6 +12,7 @@ import {
   Th,
   Thead,
   Tr,
+  Link,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useSortBy, useTable } from 'react-table'
@@ -46,7 +51,10 @@ export default function ClassList({ list, setList, deleteClass }) {
     ],
     []
   )
-  const data = React.useMemo(() => list, [list])
+  const data = React.useMemo(
+    () => list.map((c) => c.extendedProps ?? {}),
+    [list]
+  )
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data }, useSortBy)
 
@@ -86,13 +94,16 @@ export default function ClassList({ list, setList, deleteClass }) {
               {row.cells.map((cell) => (
                 <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
               ))}
-              <Td>
+              <Td gridGap={2} display="grid" sx={{ placeItems: 'center' }}>
                 <Button
                   colorScheme="red"
                   onClick={() => deleteClass(list[idx])}
                 >
                   Delete
                 </Button>
+                <Link href={list[idx].extendedProps.url} isExternal>
+                  Albert <ExternalLinkIcon mx="2px" />
+                </Link>
               </Td>
             </Tr>
           )

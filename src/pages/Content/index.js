@@ -17,9 +17,10 @@ function getClassInfo(sendResponse) {
     classInfo.title = document.querySelector(
       'body > section > section > div.primary-head'
     ).innerText
+    classInfo.url = location.href
     sendResponse({ classInfo, success: true })
   } catch (err) {
-    sendResponse({ err, success: true })
+    sendResponse({ err, success: false })
   }
 }
 

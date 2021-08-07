@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 // import RMPSearch from './RMPSearch';
+import { createEvents, INPUT_TIME_ZONE } from '../../../utils/scheduleUtils'
 
 export default function CourseDetailsModal({
   list,
@@ -26,6 +27,7 @@ export default function CourseDetailsModal({
   tempClass,
   setTempClass,
 }) {
+  console.log("🚀 ~ file: Details.jsx ~ line 30 ~ tempClass", tempClass)
   const handleAdd = (event) => {
     event.preventDefault()
     setList((prev) => [...prev, tempClass])
@@ -70,11 +72,10 @@ const CourseHeader = ({ tempClass }) => {
   } else
     return (
       <Box>
-        {tempClass.catalogNumber} {tempClass.title} #{tempClass['Class Number']}
+        {tempClass.extendedProps?.title}
       </Box>
     )
 }
-
 const CourseDetails = ({ tempClass }) => {
   if (!tempClass) {
     return (
@@ -84,14 +85,26 @@ const CourseDetails = ({ tempClass }) => {
     )
   } else
     return (
-      <SimpleGrid templateColumns={'min-content 1fr'} spacing={10}>
-        <Heading size="xs">Dates</Heading>
-        <Box>{tempClass.Dates}</Box>
-        <Heading size="xs">Meets</Heading>
-        <Box>{tempClass.Meets}</Box>
-        <Heading size="xs">Schedule</Heading>
-        {/* <Box>{tempClass.schedule?.toText()}</Box> */}
-        {/* <RMPSearch instructors={classInfo['Instructor(s)']} /> */}
+      <SimpleGrid templateColumns={'min-content 1fr'} spacingY={2} spacingX={4}>
+        <Heading size="xs" whiteSpace="nowrap">
+          Class #
+        </Heading>
+        <Box>{tempClass.extendedProps?.['Class Number']}</Box>
+        <Heading size="xs" whiteSpace="nowrap">
+          Catalog #
+        </Heading>
+        <Box>{tempClass.extendedProps?.catalogNumber}</Box>
+        <Heading size="xs" whiteSpace="nowrap">
+          Dates
+        </Heading>
+        <Box>{tempClass.extendedProps?.Dates}</Box>
+        <Heading size="xs" whiteSpace="nowrap">
+          Meets
+        </Heading>
+        <Box>{tempClass.extendedProps?.Meets}</Box>
+        {/* <Heading size="xs">Schedule</Heading> */}
+        {/* <Box>{tempClass.extendedProps.schedule?.toText()}</Box> */}
+        {/* <RMPSearch instructors={tempClass.extendedProps['Instructor(s)']} /> */}
         {/* <Button mt={4} colorScheme="gray" type="submit" w={1 / 3}>
             View
           </Button> */}
