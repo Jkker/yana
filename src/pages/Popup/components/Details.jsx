@@ -1,9 +1,7 @@
 import { LinkIcon } from '@chakra-ui/icons'
 import {
   Box,
-  Button,
-  Flex,
-  Input,
+  Button, Heading, Input,
   InputGroup,
   InputLeftElement,
   Modal,
@@ -13,71 +11,37 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
+  SimpleGrid,
+  SkeletonText
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import createClassSchedule from '../../../utils/createClassSchedule'
+import React from 'react'
 // import RMPSearch from './RMPSearch';
 
-export default function CourseDetails({ list, setList }) {
-  const [classInfo, setClassInfo] = useState({})
-  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true })
-
+export default function CourseDetailsModal({
+  list,
+  setList,
+  isOpen,
+  onOpen,
+  onClose,
+  tempClass,
+  setTempClass,
+}) {
   const handleAdd = (event) => {
     event.preventDefault()
-    setList((prev) => [...prev, classInfo])
+    setList((prev) => [...prev, tempClass])
     onClose()
   }
-  // Get Class Info from Content Script
-  useEffect(() => {
-    window.onload = () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { action: 'getClassInfo' },
-          (response) => {
-            if (response.success) {
-              createClassSchedule(response.classInfo)
-              setClassInfo(response.classInfo)
-            }
-          }
-        )
-      })
-    }
-  }, [])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {classInfo.catalogNumber} {classInfo.title} #
-          {classInfo['Class Number']}
+          <CourseHeader tempClass={tempClass} />
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody w="100%">
-          <Box>
-            <Flex justify="space-between">
-              <b>Dates</b>
-              <span>{classInfo.Dates}</span>
-            </Flex>
-            <Flex justify="space-between">
-              <b>Meets</b>
-              <span>{classInfo.Meets}</span>
-            </Flex>
-            <Flex justify="space-between">
-              <b>Schedule</b>
-              <span>{classInfo.schedule?.toText()}</span>
-            </Flex>
-            {/* <RMPSearch instructors={classInfo['Instructor(s)']} /> */}
-          </Box>
-          <Box>
-            <Flex justify="space-between">
-              {/* <Button mt={4} colorScheme="gray" type="submit" w={1 / 3}>
-            View
-          </Button> */}
-            </Flex>
-          </Box>
+          <CourseDetails tempClass={tempClass} />
         </ModalBody>
 
         <ModalFooter>
@@ -94,6 +58,45 @@ export default function CourseDetails({ list, setList }) {
       </ModalContent>
     </Modal>
   )
+}
+
+const CourseHeader = ({ tempClass }) => {
+  if (!tempClass) {
+    return (
+      <Box>
+        <SkeletonText noOfLines={1} />
+      </Box>
+    )
+  } else
+    return (
+      <Box>
+        {tempClass.catalogNumber} {tempClass.title} #{tempClass['Class Number']}
+      </Box>
+    )
+}
+
+const CourseDetails = ({ tempClass }) => {
+  if (!tempClass) {
+    return (
+      <Box>
+        <SkeletonText noOfLines={6} spacing="4" />
+      </Box>
+    )
+  } else
+    return (
+      <SimpleGrid templateColumns={'min-content 1fr'} spacing={10}>
+        <Heading size="xs">Dates</Heading>
+        <Box>{tempClass.Dates}</Box>
+        <Heading size="xs">Meets</Heading>
+        <Box>{tempClass.Meets}</Box>
+        <Heading size="xs">Schedule</Heading>
+        {/* <Box>{tempClass.schedule?.toText()}</Box> */}
+        {/* <RMPSearch instructors={classInfo['Instructor(s)']} /> */}
+        {/* <Button mt={4} colorScheme="gray" type="submit" w={1 / 3}>
+            View
+          </Button> */}
+      </SimpleGrid>
+    )
 }
 
 function AddCourse(props) {
