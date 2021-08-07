@@ -6,7 +6,7 @@ interface Props {
 }
 
 const Options: React.FC<Props> = ({ title }: Props) => {
-  return <div className="OptionsContainer">{title.toUpperCase()} PAGE</div>;
+  return <ul className="OptionsContainer">{title.toUpperCase()} PAGE</ul>;
 };
 
 export default Options;

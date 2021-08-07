@@ -1,4 +1,4 @@
-header.popup-header {
+header.add-header {
   display: flex;
   width: 100%;
   justify-content: center;
@@ -8,7 +8,7 @@ header.popup-header {
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--chakra-colors-gray-200);
 }
-main.popup-main {
+main.add-main {
   display: flex;
   width: 100%;
   justify-content: center;
