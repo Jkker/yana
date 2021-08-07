@@ -13,7 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import createClassSchedule from '../../../utils/createClassSchedule'
@@ -26,18 +26,6 @@ export default function CourseDetails({ list, setList }) {
   const handleAdd = (event) => {
     event.preventDefault()
     setList((prev) => [...prev, classInfo])
-    /* chrome..sync.get(['list'], function (result) {
-      if (!resultstorage.list) {
-        chrome.storage.sync.set({ list: [classInfo] }, function () {
-          console.table(classInfo)
-        })
-      } else {
-        const newList = [...result.list, classInfo]
-        chrome.storage.sync.set({ list: newList }, function () {
-          console.table(newList)
-        })
-      }
-    }) */
     onClose()
   }
   // Get Class Info from Content Script
@@ -47,8 +35,7 @@ export default function CourseDetails({ list, setList }) {
         chrome.tabs.sendMessage(
           tabs[0].id,
           { action: 'getClassInfo' },
-          function (response) {
-          console.log("🚀 ~ file: Details.jsx ~ line 51 ~ response", response)
+          (response) => {
             if (response.success) {
               createClassSchedule(response.classInfo)
               setClassInfo(response.classInfo)
@@ -58,6 +45,7 @@ export default function CourseDetails({ list, setList }) {
       })
     }
   }, [])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

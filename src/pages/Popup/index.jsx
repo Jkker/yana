@@ -21,18 +21,6 @@ const Popup = () => {
     setList((prevList) =>
       prevList.filter((e) => c['Class Number'] !== e['Class Number'])
     )
-    /* chrome.storage.sync.get(['list'], function (result) {
-      if (!result.list) {
-        return
-      } else {
-        const filtered = result.list.filter(
-          (e) => c['Class Number'] !== e['Class Number']
-        )
-        chrome.storage.sync.set({ list: filtered }, function () {
-          console.log('List is set to ', filtered)
-        })
-      }
-    }) */
   }
   useEffect(() => {
     console.log('🚀 ~ file: index.jsx ~ line 39 ~ useEffect ~ list', list)
