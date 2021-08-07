@@ -19,3 +19,8 @@
 
 # secrets
 secrets.*.js
+
+# temp files
+/utils/test.js
+tmp.*
+temp.*

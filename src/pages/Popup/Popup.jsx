@@ -1,17 +1,14 @@
 import {
-  Box,
-  Heading,
-  Tab,
+  Box, Tab,
   TabList,
   TabPanel,
   TabPanels,
-  Tabs,
-  Text,
+  Tabs
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import ClassInfo from './components/ClassInfo';
-import ClassList from './components/ClassList';
-import './Popup.css';
+import About from './pages/About';
+import Details from './pages/Details';
+import List from './pages/List';
 
 function deleteClass(c) {
   chrome.storage.sync.get(['list'], function (result) {
@@ -47,8 +44,8 @@ const Popup = () => {
         </TabList>
         <TabPanels>
           <TabPanel p={0} overflowX="scroll">
-            <ClassList list={list} setList={setList} deleteClass ={deleteClass}/>
-            <ClassInfo />
+            <List list={list} setList={setList} deleteClass ={deleteClass}/>
+            <Details />
           </TabPanel>
           <TabPanel>
             <p>Calender</p>
@@ -57,10 +54,8 @@ const Popup = () => {
             <p>Map</p>
           </TabPanel>
           <TabPanel>
-            <header className="popup-header">
-              <Heading>YANA</Heading>
-              <Text as="em">Yet Another NYU Albert</Text>
-            </header>
+            <About/>
+
           </TabPanel>
         </TabPanels>
       </Tabs>
