@@ -1,16 +1,31 @@
-console.log('Content script works!')
-
 function getClassInfo(sendResponse) {
   try {
     const values = document.querySelectorAll(
       'div.section-content.clearfix div.pull-right'
     )
-    const classInfo = Object.fromEntries(
-      Array.prototype.map.call(
-        document.querySelectorAll('div.section-content.clearfix div.pull-left'),
-        (key, i) => [key.innerText, values[i].innerText]
-      )
+    const keys = document.querySelectorAll(
+      'div.section-content.clearfix div.pull-left'
     )
+    let classInfo = {}
+    for (let i in keys) {
+      const key = keys[i].innerText
+      const value = values[i].innerText
+      if (key in classInfo) {
+        if (classInfo[key] === value) {
+          continue
+        } else if (key === 'Meets') {
+          const [daysOfWeek, startTime, _, endTime] = classInfo[key].split(' ')
+
+          classInfo[key] = `${daysOfWeek}${
+            value.split(' ')[0]
+          } ${startTime} ${_} ${endTime}`
+        } else {
+          classInfo[key] = [classInfo[key], value]
+        }
+      } else {
+        classInfo[key] = value
+      }
+    }
     classInfo.catalogNumber = document.querySelector(
       'body > section > header > h1'
     ).innerText
