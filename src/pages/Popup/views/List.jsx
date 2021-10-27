@@ -2,6 +2,7 @@ import {
   TriangleDownIcon,
   TriangleUpIcon,
   ExternalLinkIcon,
+  DeleteIcon,
 } from '@chakra-ui/icons'
 import {
   Button,
@@ -13,6 +14,15 @@ import {
   Thead,
   Tr,
   Link,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  IconButton,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useSortBy, useTable, useBlockLayout } from 'react-table'
@@ -25,6 +35,11 @@ export default function ClassList({ list, setList, deleteClass }) {
         Header: 'Title',
         accessor: 'title',
         sticky: 'left',
+        Cell: ({ row, value }) => (
+          <Link href={row.original.url} isExternal>
+            {value} <ExternalLinkIcon mx="2px" />
+          </Link>
+        ),
       },
       {
         Header: 'Catalog #',
@@ -33,6 +48,7 @@ export default function ClassList({ list, setList, deleteClass }) {
       {
         Header: 'Class #',
         accessor: 'Class Number',
+        width: 100,
       },
       {
         Header: 'Instructor(s)',
@@ -41,14 +57,55 @@ export default function ClassList({ list, setList, deleteClass }) {
       {
         Header: 'Meets',
         accessor: 'Meets',
+        width: 100,
       },
       {
         Header: 'Dates',
         accessor: 'Dates',
+        width: 110,
       },
       {
         Header: 'Room',
         accessor: 'Room',
+      },
+      {
+        Header: '',
+        id: 'operations',
+        accessor: 'Class Number',
+        width: 50,
+        Cell: ({ value, row }) => {
+          console.log(row.original)
+          return (
+            <Popover>
+              <PopoverTrigger>
+                <IconButton size="sm" icon={<DeleteIcon />} colorScheme="red" />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>
+                  <b>Delete {row.original.title}</b>
+                </PopoverHeader>
+                <PopoverBody>
+                  Are you sure you want to delete class {value}?
+                </PopoverBody>
+                <PopoverFooter d="flex" justifyContent="flex-end">
+                  <Button
+                    colorScheme="red"
+                    onClick={() =>
+                      deleteClass({
+                        id: value,
+                        title: row.original.title,
+                      })
+                    }
+                  >
+                    Delete
+                  </Button>
+                </PopoverFooter>
+              </PopoverContent>
+            </Popover>
+          )
+        },
       },
     ],
     []
@@ -75,6 +132,8 @@ export default function ClassList({ list, setList, deleteClass }) {
                 isNumeric={column.isNumeric}
                 overflow="hidden"
                 whiteSpace="nowrap"
+                display="flex"
+                justifyContent="space-between"
               >
                 {column.render('Header')}
                 <chakra.span pl="4">
@@ -88,7 +147,6 @@ export default function ClassList({ list, setList, deleteClass }) {
                 </chakra.span>
               </Th>
             ))}
-            <Th>Operations</Th>
           </Tr>
         ))}
       </Thead>
@@ -102,22 +160,6 @@ export default function ClassList({ list, setList, deleteClass }) {
                   {cell.render('Cell')}
                 </Td>
               ))}
-              <Td
-                lineHeight={5}
-                gridGap={2}
-                display="grid"
-                sx={{ placeItems: 'center' }}
-              >
-                <Button
-                  colorScheme="red"
-                  onClick={() => deleteClass(list[idx])}
-                >
-                  Delete
-                </Button>
-                <Link href={list[idx].extendedProps.url} isExternal>
-                  Albert <ExternalLinkIcon mx="2px" />
-                </Link>
-              </Td>
             </Tr>
           )
         })}

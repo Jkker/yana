@@ -3,9 +3,9 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import listPlugin from '@fullcalendar/list'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import timeGridPlugin from '@fullcalendar/timegrid'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { INPUT_TIME_ZONE } from '../../../utils/scheduleUtils'
-import { Box, useClipboard, useToast } from '@chakra-ui/react'
+import { Box, useClipboard, useToast, Select } from '@chakra-ui/react'
 
 const renderEvent = ({ event, timeText }) => {
   return (
@@ -23,7 +23,7 @@ const renderEvent = ({ event, timeText }) => {
   )
 }
 
-export default function Calendar({ list }) {
+export default function Calendar({ list, calendarRef }) {
   const [curr, setCurr] = useState(list[0])
   const { onCopy } = useClipboard(curr?.id)
   const toast = useToast()
@@ -41,8 +41,10 @@ export default function Calendar({ list }) {
       })
     }
   }, [curr])
+
   return (
     <FullCalendar
+      ref={calendarRef}
       plugins={[
         momentTimezonePlugin,
         dayGridPlugin,
@@ -61,7 +63,6 @@ export default function Calendar({ list }) {
       weekNumbers={true}
       slotMinTime="08:00:00"
       slotMaxTime="22:00:00"
-      initialDate="2021-09-06"
       // weekNumberCalculation={(date) => moment(date).diff(,'week')}
       views={{
         dayGrid: {

@@ -1,7 +1,9 @@
 import { LinkIcon } from '@chakra-ui/icons'
 import {
   Box,
-  Button, Heading, Input,
+  Button,
+  Heading,
+  Input,
   InputGroup,
   InputLeftElement,
   Modal,
@@ -12,25 +14,25 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  SkeletonText
+  SkeletonText,
+  useToast,
 } from '@chakra-ui/react'
 import React from 'react'
 // import RMPSearch from './RMPSearch';
 import { createEvents, INPUT_TIME_ZONE } from '../../../utils/scheduleUtils'
+import { useClasses } from '../../../models/useClassList'
 
 export default function CourseDetailsModal({
-  list,
-  setList,
   isOpen,
   onOpen,
   onClose,
   tempClass,
   setTempClass,
+  addClass,
 }) {
-  console.log("🚀 ~ file: Details.jsx ~ line 30 ~ tempClass", tempClass)
-  const handleAdd = (event) => {
+  const addTempClassToList = (event) => {
     event.preventDefault()
-    setList((prev) => [...prev, tempClass])
+    addClass(tempClass)
     onClose()
   }
 
@@ -48,7 +50,7 @@ export default function CourseDetailsModal({
 
         <ModalFooter>
           <Button
-            onClick={handleAdd}
+            onClick={addTempClassToList}
             mt={4}
             colorScheme="teal"
             type="submit"
@@ -69,12 +71,7 @@ const CourseHeader = ({ tempClass }) => {
         <SkeletonText noOfLines={1} />
       </Box>
     )
-  } else
-    return (
-      <Box>
-        {tempClass.extendedProps?.title}
-      </Box>
-    )
+  } else return <Box>{tempClass.extendedProps?.title}</Box>
 }
 const CourseDetails = ({ tempClass }) => {
   if (!tempClass) {

@@ -14,15 +14,14 @@
     "resolveJsonModule": true,
     "noEmit": false,
     "jsx": "react",
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "paths": {
-      "@models/*": ["models/*"],
-      "@pages/*": ["pages/*"],
-      "@utils/*": ["utils/*"],
-      "@assets/*": ["assets/*"],
-      "@data/*": ["data/*"],
+      "@models/*": ["./models/*"],
+      "@pages/*": ["./pages/*"],
+      "@utils/*": ["./utils/*"],
+      "@assets/*": ["./assets/*"],
+      "@data/*": ["./data/*"],
     }
   },
-  "include": ["src"],
   "exclude": ["build", "node_modules"]
 }

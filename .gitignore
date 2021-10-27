@@ -24,3 +24,7 @@ secrets.*.js
 /utils/test.js
 tmp.*
 temp.*
+
+.yarn/
+.vscode/
+yarn-error.log
