@@ -4,7 +4,7 @@ import listPlugin from '@fullcalendar/list'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import React, { useState, useEffect, useRef } from 'react'
-import { INPUT_TIME_ZONE } from '../../../utils/scheduleUtils'
+import { INPUT_TIME_ZONE } from '@utils/scheduleUtils'
 import { Box, useClipboard, useToast, Select } from '@chakra-ui/react'
 
 const renderEvent = ({ event, timeText }) => {
@@ -23,24 +23,25 @@ const renderEvent = ({ event, timeText }) => {
   )
 }
 
-export default function Calendar({ list, calendarRef }) {
-  const [curr, setCurr] = useState(list[0])
-  const { onCopy } = useClipboard(curr?.id)
+export default function Calendar({ list, calendarRef, showClassDetails }) {
+  // const [curr, setCurr] = useState(list[0])
+  // const { onCopy } = useClipboard(curr?.id)
   const toast = useToast()
   const eventClick = ({ event }) => {
-    setCurr(event)
+    // setCurr(event)
+    showClassDetails(event)
   }
-  useEffect(() => {
-    if (curr) {
-      onCopy()
-      toast({
-        title: `Copied ${curr.id} to clipboard`,
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      })
-    }
-  }, [curr])
+  // useEffect(() => {
+  //   if (curr) {
+  //     onCopy()
+  //     toast({
+  //       title: `Copied ${curr.id} to clipboard`,
+  //       status: 'success',
+  //       duration: 2000,
+  //       isClosable: true,
+  //     })
+  //   }
+  // }, [curr])
 
   return (
     <FullCalendar

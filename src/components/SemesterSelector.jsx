@@ -1,21 +1,10 @@
-import React from 'react'
+import { CalendarIcon } from '@chakra-ui/icons'
 import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuIcon,
-  MenuCommand,
-  MenuDivider,
-  Select,
-  Button,
-  Portal,
+  Button, Menu,
+  MenuButton, MenuItem, MenuList
 } from '@chakra-ui/react'
 import options from '@data/semester'
-import { CalendarIcon } from '@chakra-ui/icons'
+import React from 'react'
 
 export default function SemesterSelector({ value, onChange }) {
   return (

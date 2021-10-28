@@ -33,6 +33,13 @@ function getClassInfo(sendResponse) {
       'body > section > section > div.primary-head'
     ).innerText
     classInfo.url = location.href
+
+    classInfo.classNumber = classInfo['Class Number']
+    delete classInfo['Class Number']
+    classInfo.instructor = classInfo['Instructor(s)']
+    delete classInfo['Instructor(s)']
+
+
     sendResponse({ classInfo, success: true })
   } catch (err) {
     sendResponse({ err, success: false })

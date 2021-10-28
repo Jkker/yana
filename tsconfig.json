@@ -21,6 +21,8 @@
       "@utils/*": ["utils/*"],
       "@assets/*": ["assets/*"],
       "@data/*": ["data/*"],
+      "@components/*": ["components/*"],
+      "@views/*": ["views/*"],
     }
   },
   "include": ["src"],

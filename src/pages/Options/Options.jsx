@@ -13,8 +13,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useClasses, useSemester, useTabIndex } from '@models'
-import React, { useEffect, useRef, useState } from 'react'
-import { render } from 'react-dom'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { createEvents } from '@utils/scheduleUtils'
 import CourseDetailsModal from '@components/CourseDetails'
 import SemesterSelector from '@components/SemesterSelector'
@@ -24,7 +23,7 @@ import Calender from '@views/Calender'
 import ListView from '@views/List'
 import semesterList from '@data/semester'
 
-const Popup = () => {
+const OptionsPage = () => {
   const { list, setList, deleteClass, addClass, updateClass } = useClasses()
   const [tempClass, setTempClass] = useState(null)
   const [tabIndex, setTabIndex] = useTabIndex()
@@ -39,33 +38,10 @@ const Popup = () => {
     onOpen()
   }
 
-  // Get Class Info from Content Script
-  useEffect(() => {
-    window.onload = () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        const url = tabs[0].url
-        if (url.includes('https://m.albert.nyu.edu/app/catalog/classsection')) {
-          onOpen()
-          chrome.tabs.sendMessage(
-            tabs[0].id,
-            { action: 'getClassInfo' },
-            (response) => {
-              if (response?.success) {
-                setTempClass(createEvents(response.classInfo, colors))
-              } else {
-                toast({
-                  title: 'GetClassInfo Error',
-                  status: 'error',
-                  duration: 5000,
-                  isClosable: true,
-                })
-              }
-            }
-          )
-        }
-      })
-    }
-  }, [onOpen])
+  const showClassDetails = (value) => {
+    setTempClass(value)
+    onOpen()
+  }
 
   // Load semester
   useEffect(() => {
@@ -73,11 +49,6 @@ const Popup = () => {
       calendarRef.current?.getApi().gotoDate(semesterList[semester].beginDate)
     }
   }, [semester])
-
-  const showClassDetails = (value) => {
-    setTempClass(value)
-    onOpen()
-  }
 
   return (
     <Box w="100%" p={4}>
@@ -152,11 +123,4 @@ const Popup = () => {
   )
 }
 
-render(
-  <ChakraProvider>
-    <Popup />
-  </ChakraProvider>,
-  window.document.querySelector('#app-container')
-)
-
-if (module.hot) module.hot.accept()
+export default OptionsPage

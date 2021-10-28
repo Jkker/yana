@@ -22,11 +22,22 @@ export const useClasses = () => {
   const toast = useToast()
   const history = []
 
-  const deleteClass = useCallback((c) => {
-    const event = { action: 'delete', class: c, success: false }
-    history.push(event)
-    setList((prev) => prev.filter((e) => c.id !== e.id))
+  const deleteClass = useCallback((id) => {
+    setList((prev) => {
+      const event = {
+        action: 'delete',
+        class: prev.find((c) => c.id === id),
+        success: false,
+      }
+      history.push(event)
+      return prev.filter((c) => id !== c.id)
+    })
   }, [])
+  // const deleteClass = useCallback((c) => {
+  //   const event = { action: 'delete', class: c, success: false }
+  //   history.push(event)
+  //   setList((prev) => prev.filter((e) => c.id !== e.id))
+  // }, [])
 
   const addClass = useCallback((c) => {
     setList((prev) => {
@@ -46,17 +57,31 @@ export const useClasses = () => {
     })
   }, [])
 
-  const updateClass = useCallback((c) => {
-    const event = { action: 'update', class: c, success: false }
-    history.push(event)
-    setList((prev) => {
-      return prev.map((e) => (e.id === c.id ? { ...e, ...c } : e))
-    })
-  }, [])
+  const updateClass = useCallback(
+    (id, newData, updateExtendedProps = false) => {
+      setList((prev) => {
+        const index = prev.findIndex((c) => c.id === id)
+        const event = {
+          action: 'update',
+          class: prev[index],
+          success: false,
+        }
+        history.push(event)
+        if (updateExtendedProps) {
+          Object.assign(prev[index].extendedProps, newData)
+        } else prev[index] = { ...prev[index], ...newData }
+        return [...prev]
+      })
+    },
+    []
+  )
 
-  const getClassById = useCallback((id) => {
-    return list.find((e) => e.id === id)
-  }, [])
+  // const getClassById = useCallback(
+  //   (id) => {
+  //     return list.find((e) => e.id == id)
+  //   },
+  //   [list]
+  // )
 
   useEffect(() => {
     if (error) {
@@ -131,6 +156,5 @@ export const useClasses = () => {
     deleteClass,
     addClass,
     updateClass,
-    getClassById,
   }
 }

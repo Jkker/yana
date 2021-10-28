@@ -41,7 +41,7 @@ export function createEvents(data, colors) {
   const { title, Dates, Meets } = data
   const [daysOfWeek, startTime, _, endTime] = Meets.split(' ')
   const [startRecur, endRecur] = Dates.split(' - ').map(parseDate)
-  const ID = data['Class Number']
+  const ID = data.classNumber
   const color = mapIDtoColor(ID)
   const event = {
     title,

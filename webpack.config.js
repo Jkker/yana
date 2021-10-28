@@ -16,6 +16,8 @@ var alias = {
   '@utils': path.resolve(__dirname, 'src/utils'),
   '@assets': path.resolve(__dirname, 'src/assets'),
   '@data': path.resolve(__dirname, 'src/data'),
+  '@components': path.resolve(__dirname, 'src/components'),
+  '@views': path.resolve(__dirname, 'src/views'),
 }
 
 // load the secrets
