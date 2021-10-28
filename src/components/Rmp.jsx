@@ -67,54 +67,6 @@ const listResultMap = {
   retake: 'Take again',
 }
 
-const RMPListResult = ({ data, fields = listResultMap }) => (
-  <SimpleGrid templateColumns={'min-content 1fr'} spacingY={2} spacingX={4}>
-    {Object.entries(fields).map(([key, label]) =>
-      data[key] ? (
-        <Fragment key={'rmp-' + key + '-key'}>
-          <Heading size="xs" whiteSpace="nowrap">
-            {label}
-          </Heading>
-          <Box>{data[key]}</Box>
-        </Fragment>
-      ) : undefined
-    )}
-    {data.tags && data.tags.length > 0 && (
-      <>
-        <Heading size="xs" whiteSpace="nowrap">
-          Tags
-        </Heading>
-        <Grid gap={1}>
-          {data.tags.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
-        </Grid>
-      </>
-    )}
-  </SimpleGrid>
-)
-
-export const RMPCellResult = ({ data }) => (
-  <SimpleGrid templateColumns={'min-content 1fr'} spacingY={1} spacingX={3}>
-    <Box fontWeight="medium" whiteSpace="nowrap">
-      Rating
-    </Box>
-    <Box>{data.rating} / 5</Box>
-    <Box fontWeight="medium" whiteSpace="nowrap">
-      Difficulty
-    </Box>
-    <Box>{data.difficulity} / 5</Box>
-    <Box fontWeight="medium" whiteSpace="nowrap">
-      Count
-    </Box>
-    <Box>{data.count}</Box>
-    <Box fontWeight="medium" whiteSpace="nowrap">
-      Take again
-    </Box>
-    <Box>{data.retake}</Box>
-  </SimpleGrid>
-)
-
 export default function RMP({ data, setData }) {
   const [isLoading, setLoading] = useState(false)
   const [isEditing, setEdit] = useState(false)
@@ -181,42 +133,23 @@ export default function RMP({ data, setData }) {
       }}
     >
       <HStack className="rmp-cell-data-item">
-        <Box fontWeight="medium" whiteSpace="nowrap">
+        <Box whiteSpace="nowrap">
           Rating
         </Box>
         <Box>{data.rating}/5</Box>
       </HStack>
       <HStack className="rmp-cell-data-item">
-        <Box fontWeight="medium" whiteSpace="nowrap">
+        <Box whiteSpace="nowrap">
           Difficulty
         </Box>
         <Box>{data.difficulity}/5</Box>
       </HStack>
       <HStack className="rmp-cell-data-item">
-        <Box fontWeight="medium" whiteSpace="nowrap">
+        <Box whiteSpace="nowrap">
           Take again
         </Box>
         <Box>{data.retake}</Box>
       </HStack>
-      {/* <HStack className="rmp-cell-data-item">
-        <IconButton
-          title="edit"
-          size="xs"
-          icon={<EditIcon />}
-          onClick={() => setEdit(true)}
-          isLoading={isLoading}
-        />
-        <Box fontSize="sm" color="gray.600">
-          {moment(data.date).toNow(true)}
-        </Box>
-        <IconButton
-          title="refresh"
-          size="xs"
-          icon={<RepeatIcon />}
-          onClick={refresh}
-          isLoading={isLoading}
-        />
-      </HStack> */}
     </Flex>
   )
 }
