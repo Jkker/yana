@@ -1,42 +1,33 @@
 import {
-  TriangleDownIcon,
-  TriangleUpIcon,
   ExternalLinkIcon,
+  TriangleDownIcon,
   DeleteIcon,
+  TriangleUpIcon,
 } from '@chakra-ui/icons'
 import {
+  Box,
   Button,
-  chakra,
+  Flex,
+  HStack,
+  IconButton,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
-  Link,
-  Box,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
-  PopoverCloseButton,
-  IconButton,
-  HStack,
-  Flex,
 } from '@chakra-ui/react'
+import DeleteClassButton from '@components/DeleteClassButton'
+import RMP from '@components/Rmp'
 import React from 'react'
 import {
+  useFlexLayout,
+  useResizeColumns,
+  useRowSelect,
   useSortBy,
   useTable,
-  useRowSelect,
-  useResizeColumns,
-  useFlexLayout,
 } from 'react-table'
 import { useSticky } from 'react-table-sticky'
-import RMP from '@components/Rmp'
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -108,7 +99,7 @@ export default function ClassList({
         width: 110,
         Cell: ({ value: id, row }) => (
           <RMP
-            data={row.original.extendedProps.rmp}
+            data={row.original.extendedProps?.rmp}
             setData={(data) => updateClass(id, { rmp: data }, true)}
           />
         ),
@@ -181,43 +172,26 @@ export default function ClassList({
             Cell: ({ value: id, row }) => {
               return (
                 <Box>
-                  <Popover>
-                    <PopoverTrigger>
-                      <IconButton
-                        size="sm"
-                        icon={<DeleteIcon />}
-                        colorScheme="red"
-                        variant="outline"
-                      />
-                    </PopoverTrigger>
-                    <Link href={row.original.extendedProps?.url} isExternal>
-                      <IconButton
-                        size="sm"
-                        icon={<ExternalLinkIcon />}
-                        variant="outline"
-                        colorScheme="blue"
-                        mt={2}
-                      />
-                    </Link>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>
-                        <b>Delete {row.original.title}</b>
-                      </PopoverHeader>
-                      <PopoverBody>
-                        Are you sure you want to delete class {id}?
-                      </PopoverBody>
-                      <PopoverFooter d="flex" justifyContent="flex-end">
-                        <Button
-                          colorScheme="red"
-                          onClick={() => deleteClass(id)}
-                        >
-                          Delete
-                        </Button>
-                      </PopoverFooter>
-                    </PopoverContent>
-                  </Popover>
+                  <DeleteClassButton
+                    deleteClass={deleteClass}
+                    id={id}
+                    title={row.original.title}
+                  >
+                    <IconButton
+                      size="sm"
+                      title="Delete Class"
+                      icon={<DeleteIcon />}
+                      colorScheme="red"
+                      variant="outline"
+                    />
+                  </DeleteClassButton>
+                  <IconButton
+                    size="sm"
+                    icon={<ExternalLinkIcon />}
+                    variant="outline"
+                    colorScheme="blue"
+                    mt={2}
+                  />
                 </Box>
               )
             },

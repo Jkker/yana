@@ -13,12 +13,15 @@ const renderEvent = ({ event, timeText }) => {
       cursor="pointer"
       height="100%"
       overflow="hidden"
+      // bgColor={event.backgroundColor}
       p={'2px'}
       _hover={{ background: 'rgba(0,0,0,0.05)' }}
       _active={{ background: 'rgba(0,0,0,0.1)' }}
       transition="all 0.2s"
     >
-      {event.title} {timeText}
+      <b>{event.title}</b>
+      <br />
+      {event.extendedProps.instructor} {timeText}
     </Box>
   )
 }
@@ -29,7 +32,27 @@ export default function Calendar({ list, calendarRef, showClassDetails }) {
   const toast = useToast()
   const eventClick = ({ event }) => {
     // setCurr(event)
-    showClassDetails(event)
+    const {
+      title,
+      id,
+      start,
+      end,
+      extendedProps,
+      backgroundColor,
+      borderColor,
+      textColor,
+    } = event
+
+    showClassDetails({
+      title,
+      id,
+      start,
+      end,
+      extendedProps,
+      backgroundColor,
+      borderColor,
+      textColor,
+    })
   }
   // useEffect(() => {
   //   if (curr) {
@@ -64,6 +87,7 @@ export default function Calendar({ list, calendarRef, showClassDetails }) {
       weekNumbers={true}
       slotMinTime="08:00:00"
       slotMaxTime="22:00:00"
+      eventDisplay="block"
       // weekNumberCalculation={(date) => moment(date).diff(,'week')}
       views={{
         dayGrid: {

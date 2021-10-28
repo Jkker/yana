@@ -147,6 +147,7 @@ const Popup = () => {
         tempClass={tempClass}
         setTempClass={setTempClass}
         updateClass={updateClass}
+        deleteClass={deleteClass}
       />
     </Box>
   )

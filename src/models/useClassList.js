@@ -1,4 +1,7 @@
-import { createChromeStorageStateHookSync } from 'use-chrome-storage'
+import {
+  createChromeStorageStateHookSync,
+  createChromeStorageStateHookLocal,
+} from 'use-chrome-storage'
 import { useEffect, useCallback, useState } from 'react'
 import { useToast } from '@chakra-ui/toast'
 
@@ -12,7 +15,7 @@ import { useToast } from '@chakra-ui/toast'
 const SETTINGS_KEY = 'list'
 const INITIAL_VALUE = []
 
-export const useClassList = createChromeStorageStateHookSync(
+export const useClassList = createChromeStorageStateHookLocal(
   SETTINGS_KEY,
   INITIAL_VALUE
 )
@@ -57,24 +60,39 @@ export const useClasses = () => {
     })
   }, [])
 
-  const updateClass = useCallback(
-    (id, newData, updateExtendedProps = false) => {
-      setList((prev) => {
-        const index = prev.findIndex((c) => c.id === id)
-        const event = {
-          action: 'update',
-          class: prev[index],
+  const updateClass = useCallback((id, newData) => {
+    setList((prev) => {
+      // let prevClass = prev.find((c) => c.id === id)
+      let index = prev.findIndex((c) => c.id === id)
+      if (index === -1) {
+        history.push({
+          action: 'add',
+          class: newData,
           success: false,
-        }
-        history.push(event)
-        if (updateExtendedProps) {
-          Object.assign(prev[index].extendedProps, newData)
-        } else prev[index] = { ...prev[index], ...newData }
-        return [...prev]
+        })
+        return [...prev, newData]
+      }
+
+      history.push({
+        action: 'update',
+        class: prev[index],
+        success: false,
       })
-    },
-    []
-  )
+      prev[index] = newData.extendedProps
+        ? {
+            ...prev[index],
+            ...newData,
+            extendedProps: {
+              ...prev[index]?.extendedProps,
+              ...newData.extendedProps,
+            },
+          }
+        : { ...prev[index], ...newData }
+      console.log(prev[index])
+
+      return [...prev]
+    })
+  }, [])
 
   // const getClassById = useCallback(
   //   (id) => {

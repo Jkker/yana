@@ -1,8 +1,6 @@
 import { AddIcon } from '@chakra-ui/icons'
 import {
-  Box,
-  ChakraProvider,
-  IconButton,
+  Box, IconButton,
   Tab,
   TabList,
   TabPanel,
@@ -10,18 +8,17 @@ import {
   Tabs,
   useDisclosure,
   useTheme,
-  useToast,
+  useToast
 } from '@chakra-ui/react'
-import { useClasses, useSemester, useTabIndex } from '@models'
-import React, { useEffect, useRef, useState, useCallback } from 'react'
-import { createEvents } from '@utils/scheduleUtils'
 import CourseDetailsModal from '@components/CourseDetails'
 import SemesterSelector from '@components/SemesterSelector'
-import './index.css'
+import semesterList from '@data/semester'
+import { useClasses, useSemester, useTabIndex } from '@models'
 import About from '@views/About'
 import Calender from '@views/Calender'
 import ListView from '@views/List'
-import semesterList from '@data/semester'
+import React, { useEffect, useRef, useState } from 'react'
+import './index.css'
 
 const OptionsPage = () => {
   const { list, setList, deleteClass, addClass, updateClass } = useClasses()
@@ -39,6 +36,8 @@ const OptionsPage = () => {
   }
 
   const showClassDetails = (value) => {
+  console.log("🚀 ~ file: Options.jsx ~ line 39 ~ showClassDetails ~ value", value)
+
     setTempClass(value)
     onOpen()
   }
@@ -118,6 +117,7 @@ const OptionsPage = () => {
         tempClass={tempClass}
         setTempClass={setTempClass}
         updateClass={updateClass}
+        deleteClass={deleteClass}
       />
     </Box>
   )

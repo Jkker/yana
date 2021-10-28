@@ -51,8 +51,8 @@ export function createEvents(data, colors) {
     daysOfWeek: parseWeekDays(daysOfWeek),
     startTime: parseTime(startTime),
     endTime: parseTime(endTime),
-    color: colors[color][400],
-    textColor: colors[color][50],
+    backgroundColor: colors[color][400],
+    textColor: '#fff',
     extendedProps: { color, ...data },
   }
   return event

@@ -1,8 +1,7 @@
-import { LinkIcon } from '@chakra-ui/icons'
+import { LinkIcon, DeleteIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
-  Heading,
   Input,
   InputGroup,
   InputLeftElement,
@@ -16,18 +15,14 @@ import {
   SimpleGrid,
   SkeletonText,
   useToast,
-  Grid,
-  Tag,
+  IconButton,
+  HStack,
   Flex,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatArrow,
-  StatGroup,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { RMPStatView } from './Rmp'
+import ColorSelector from './ColorSelector'
+import DeleteClassButton from '@components/DeleteClassButton'
 
 export default function CourseDetailsModal({
   isOpen,
@@ -37,23 +32,40 @@ export default function CourseDetailsModal({
   setTempClass,
   addClass,
   updateClass,
+  deleteClass,
 }) {
+  console.log('🚀 ~ file: CourseDetails.jsx ~ line 41 ~ tempClass', tempClass)
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
-  const saveTempClass = (event) => {
-    event.preventDefault()
-    addClass(tempClass)
+  const saveTempClass = () => {
+    updateClass(tempClass.id, tempClass)
     onClose()
   }
+  const updateTempClass = (data) => {
+    setTempClass((prevClass) => {
+      if (data.extendedProps)
+        return {
+          ...prevClass,
+          ...data,
+          extendedProps: { ...prevClass?.extendedProps, ...data.extendedProps },
+        }
+      else return { ...prevClass, ...data }
+    })
+  }
+  // useEffect(() => {
+  //   saveTempClass()
+  // }, [tempClass])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <CourseContent
+        onClose={onClose}
         isLoading={isLoading}
         tempClass={tempClass}
         saveTempClass={saveTempClass}
-        updateClass={updateClass}
+        updateTempClass={updateTempClass}
+        deleteClass={deleteClass}
       />
     </Modal>
   )
@@ -62,7 +74,9 @@ const CourseContent = ({
   tempClass,
   saveTempClass,
   isLoading,
-  updateClass,
+  updateTempClass,
+  deleteClass,
+  onClose,
 }) => {
   if (isLoading || !tempClass) {
     return (
@@ -92,8 +106,19 @@ const CourseContent = ({
   } else
     return (
       <ModalContent>
-        <ModalHeader>
-          <Box>{tempClass.extendedProps?.title}</Box>
+        <ModalHeader display="flex" alignItems="center">
+          <ColorSelector
+            color={tempClass.color ?? tempClass.backgroundColor}
+            mr={4}
+            onSetColor={(color) =>
+              updateTempClass({
+                backgroundColor: color,
+                borderColor: color,
+                color: color,
+              })
+            }
+          />
+          {tempClass.extendedProps?.title}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody w="100%">
@@ -123,24 +148,36 @@ const CourseContent = ({
               Instructor(s)
             </Box>
             <Box>{tempClass.extendedProps?.instructor}</Box>
+            <Box fontWeight="medium" whiteSpace="nowrap">
+              Room
+            </Box>
+            <Box>{tempClass.extendedProps?.Room}</Box>
           </SimpleGrid>
+          <Box my={1} fontSize="sm" fontWeight="medium">
+            Description
+          </Box>
+          <p>{tempClass.extendedProps?.Description}</p>
 
           <RMPStatView
             data={tempClass.extendedProps?.rmp}
-            setData={(data) => updateClass(tempClass.id, { rmp: data }, true)}
+            setData={(data) => {
+              updateTempClass({ extendedProps: { rmp: data } })
+            }}
           />
         </ModalBody>
 
-        <ModalFooter>
-          <Button
-            onClick={saveTempClass}
-            mt={4}
-            colorScheme="green"
-            type="submit"
-            isFullWidth
-          >
-            Save
-          </Button>
+        <ModalFooter display="flex" justifyContent="space-between">
+          <HStack spacing={4}>
+            <Button onClick={saveTempClass} colorScheme="green" type="submit">
+              Save
+            </Button>
+            <DeleteClassButton
+              deleteClass={deleteClass}
+              id={tempClass.id}
+              title={tempClass.title}
+            />
+          </HStack>
+          <Button onClick={() => onClose()}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     )

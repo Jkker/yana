@@ -3,6 +3,7 @@ import {
   CheckIcon,
   EditIcon,
   RepeatIcon,
+  ExternalLinkIcon,
 } from '@chakra-ui/icons'
 import {
   Box,
@@ -23,6 +24,7 @@ import {
   StatHelpText,
   StatArrow,
   StatGroup,
+  Link,
 } from '@chakra-ui/react'
 import { parse } from 'node-html-parser'
 import React, { Fragment, useState } from 'react'
@@ -47,9 +49,9 @@ async function getRMPData(url) {
 
     return {
       name,
-      rating: parseInt(rating),
+      rating: parseFloat(rating),
       count: parseInt(count),
-      difficulity: parseInt(feedback.lastChild.firstChild.text),
+      difficulity: parseFloat(feedback.lastChild.firstChild.text),
       retake: feedback.firstChild.firstChild.text,
       tags,
       url,
@@ -70,7 +72,7 @@ const listResultMap = {
 export default function RMP({ data, setData }) {
   const [isLoading, setLoading] = useState(false)
   const [isEditing, setEdit] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(data?.url ?? '')
   // const [data, setData] = useState()
   const addRMP = async () => {
     setLoading(true)
@@ -133,21 +135,17 @@ export default function RMP({ data, setData }) {
       }}
     >
       <HStack className="rmp-cell-data-item">
-        <Box whiteSpace="nowrap">
-          Rating
-        </Box>
+        <Link href={data.url} isExternal>
+          <Box whiteSpace="nowrap">Rating</Box>
+        </Link>
         <Box>{data.rating}/5</Box>
       </HStack>
       <HStack className="rmp-cell-data-item">
-        <Box whiteSpace="nowrap">
-          Difficulty
-        </Box>
+        <Box whiteSpace="nowrap">Difficulty</Box>
         <Box>{data.difficulity}/5</Box>
       </HStack>
       <HStack className="rmp-cell-data-item">
-        <Box whiteSpace="nowrap">
-          Take again
-        </Box>
+        <Box whiteSpace="nowrap">Take again</Box>
         <Box>{data.retake}</Box>
       </HStack>
     </Flex>
@@ -156,7 +154,7 @@ export default function RMP({ data, setData }) {
 export function RMPStatView({ data, setData }) {
   const [isLoading, setLoading] = useState(false)
   const [isEditing, setEdit] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(data?.url ?? '')
   // const [data, setData] = useState()
   const addRMP = async () => {
     setLoading(true)
@@ -206,19 +204,14 @@ export function RMPStatView({ data, setData }) {
   return (
     <Flex wrap="wrap" mt={3}>
       <Flex justifyContent="space-between" w="full">
-        <HStack>
-          <Heading size="md">RateMyProfesser</Heading>
-          <IconButton
-            title="Edit URL"
-            size="sm"
-            icon={<EditIcon />}
-            onClick={() => setEdit(true)}
-            isLoading={isLoading}
-          />
-        </HStack>
-        <HStack ml={1}>
-          <Box fontSize="sm" color="gray.600">
-            Fetched {moment(data.date).toNow(true)} ago
+        <Link href={data.url} isExternal display="flex" alignItems="center">
+          <Heading size="md" display="flex" alignItems="center">
+            RateMyProfesser <ExternalLinkIcon ml={1}/>
+          </Heading>
+        </Link>
+        <Flex alignItems="center">
+          <Box mr={1} fontSize="sm" color="gray.600">
+            {moment(data.date).toNow(true)} ago
           </Box>
           <IconButton
             title="Refresh"
@@ -227,7 +220,15 @@ export function RMPStatView({ data, setData }) {
             onClick={refresh}
             isLoading={isLoading}
           />
-        </HStack>
+          <IconButton
+            title="Edit URL"
+            size="sm"
+            ml={3}
+            icon={<EditIcon />}
+            onClick={() => setEdit(true)}
+            isLoading={isLoading}
+          />
+        </Flex>
       </Flex>
 
       <StatGroup mb={2} mt={4} w="full">
