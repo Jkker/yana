@@ -1,11 +1,12 @@
+import { Box } from '@chakra-ui/react'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'
 import listPlugin from '@fullcalendar/list'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import timeGridPlugin from '@fullcalendar/timegrid'
-import React, { useState, useEffect, useRef } from 'react'
+import { useClassList } from '@models'
 import { INPUT_TIME_ZONE } from '@utils/scheduleUtils'
-import { Box, useClipboard, useToast, Select } from '@chakra-ui/react'
+import React from 'react'
 
 const renderEvent = ({ event, timeText }) => {
   return (
@@ -26,10 +27,10 @@ const renderEvent = ({ event, timeText }) => {
   )
 }
 
-export default function Calendar({ list, calendarRef, showClassDetails }) {
-  // const [curr, setCurr] = useState(list[0])
+export default function Calendar({ calendarRef, showClassDetails }) {
   // const { onCopy } = useClipboard(curr?.id)
-  const toast = useToast()
+  const [list, dispatch, ACTIONS] = useClassList()
+
   const eventClick = ({ event }) => {
     // setCurr(event)
     const {

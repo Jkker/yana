@@ -38,9 +38,13 @@ function getClassInfo(sendResponse) {
     delete classInfo['Class Number']
     classInfo.instructor = classInfo['Instructor(s)']
     delete classInfo['Instructor(s)']
-
-
-    sendResponse({ classInfo, success: true })
+    classInfo.title = classInfo.Topic
+      ? classInfo.title + ' ' + classInfo.Topic
+      : classInfo.title
+    sendResponse({
+      classInfo,
+      success: true,
+    })
   } catch (err) {
     sendResponse({ err, success: false })
   }

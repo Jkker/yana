@@ -23,6 +23,7 @@ import React, { useState } from 'react'
 import { RMPStatView } from './Rmp'
 import ColorSelector from './ColorSelector'
 import DeleteClassButton from '@components/DeleteClassButton'
+import { useClassList } from '@models'
 
 export default function CourseDetailsModal({
   isOpen,
@@ -30,17 +31,15 @@ export default function CourseDetailsModal({
   onClose,
   tempClass,
   setTempClass,
-  addClass,
-  updateClass,
-  deleteClass,
 }) {
-  console.log('🚀 ~ file: CourseDetails.jsx ~ line 41 ~ tempClass', tempClass)
+  const [list, dispatch, ACTIONS] = useClassList()
+
   const [isLoading, setIsLoading] = useState(false)
-  const toast = useToast()
   const saveTempClass = () => {
-    updateClass(tempClass.id, tempClass)
+    dispatch({ type: ACTIONS.UPDATE, payload: tempClass })
     onClose()
   }
+
   const updateTempClass = (data) => {
     setTempClass((prevClass) => {
       if (data.extendedProps)
@@ -52,9 +51,7 @@ export default function CourseDetailsModal({
       else return { ...prevClass, ...data }
     })
   }
-  // useEffect(() => {
-  //   saveTempClass()
-  // }, [tempClass])
+
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -65,7 +62,6 @@ export default function CourseDetailsModal({
         tempClass={tempClass}
         saveTempClass={saveTempClass}
         updateTempClass={updateTempClass}
-        deleteClass={deleteClass}
       />
     </Modal>
   )
@@ -75,7 +71,6 @@ const CourseContent = ({
   saveTempClass,
   isLoading,
   updateTempClass,
-  deleteClass,
   onClose,
 }) => {
   if (isLoading || !tempClass) {
@@ -172,7 +167,6 @@ const CourseContent = ({
               Save
             </Button>
             <DeleteClassButton
-              deleteClass={deleteClass}
               id={tempClass.id}
               title={tempClass.title}
             />

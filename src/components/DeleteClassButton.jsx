@@ -1,40 +1,19 @@
-import React from 'react'
 import {
-  Button,
-  chakra,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  Link,
-  Box,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
-  PopoverCloseButton,
-  IconButton,
-  HStack,
-  Flex,
-  useDisclosure,
-} from '@chakra-ui/react'
-import {
-  TriangleDownIcon,
-  TriangleUpIcon,
-  ExternalLinkIcon,
-  DeleteIcon,
+  DeleteIcon
 } from '@chakra-ui/icons'
+import {
+  Button, IconButton, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverFooter, PopoverHeader, PopoverTrigger, useDisclosure
+} from '@chakra-ui/react'
+import { useClassList } from '@models'
+import React from 'react'
+
 export default function DeleteClassButton({
   children,
   id,
   title,
   deleteClass,
 }) {
+  const [list, dispatch, ACTIONS] = useClassList()
   const { onOpen, onClose, isOpen } = useDisclosure()
   const initialFocusRef = React.useRef()
 
@@ -68,7 +47,7 @@ export default function DeleteClassButton({
             title="Confirm delete"
             colorScheme="red"
             onClick={() => {
-              deleteClass(id)
+              dispatch({ type: ACTIONS.REMOVE, payload: { id } })
               onClose()
             }}
             tabIndex={2}

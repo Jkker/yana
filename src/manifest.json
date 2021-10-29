@@ -24,5 +24,12 @@
       "matches": []
     }
   ],
-  "permissions": ["storage", "tabs"]
+  "permissions": [
+    "storage",
+    "tabs",
+    "clipboardRead",
+    "clipboardWrite",
+    "notifications",
+    "unlimitedStorage"
+  ]
 }

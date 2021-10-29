@@ -28,6 +28,7 @@ import {
   useTable,
 } from 'react-table'
 import { useSticky } from 'react-table-sticky'
+import { useClassList } from '@models'
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -46,15 +47,35 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-export default function ClassList({
-  list,
-  setList,
-  deleteClass,
-  updateClass,
-  showClassDetails,
-}) {
+export default function ListView({ showClassDetails }) {
+  const [data, dispatch, ACTIONS] = useClassList()
   const columns = React.useMemo(
     () => [
+      // Let's make a column for selection
+      {
+        id: 'selection',
+        disableResizing: true,
+        sticky: 'left',
+        minWidth: 35,
+        width: 35,
+        maxWidth: 35,
+        hidden: true,
+        // The header can use the table's getToggleAllRowsSelectedProps method
+        // to render a checkbox
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <Box pl={3}>
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+          </Box>
+        ),
+        // The cell can use the individual row's getToggleRowSelectedProps method
+        // to the render a checkbox
+        Cell: ({ row }) => (
+          <Flex h="full" align="center">
+            <Box bgColor={row.original.color} h="full" w={1} mr={2} />
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+          </Flex>
+        ),
+      },
       {
         Header: 'Title',
         accessor: 'title',
@@ -100,7 +121,12 @@ export default function ClassList({
         Cell: ({ value: id, row }) => (
           <RMP
             data={row.original.extendedProps?.rmp}
-            setData={(data) => updateClass(id, { rmp: data }, true)}
+            setData={(data) =>
+              dispatch({
+                type: ACTIONS.UPDATE_EXTENDED_PROPS,
+                payload: { id, extendedProps: { rmp: data } },
+              })
+            }
           />
         ),
       },
@@ -119,14 +145,39 @@ export default function ClassList({
         accessor: 'extendedProps.Room',
         width: 140,
       },
+      {
+        Header: '',
+        id: 'operations',
+        accessor: 'id',
+        disableResizing: true,
+        width: 32,
+        Cell: ({ value: id, row }) => {
+          return (
+            <Box>
+              <DeleteClassButton id={id} title={row.original.title}>
+                <IconButton
+                  size="sm"
+                  title="Delete Class"
+                  icon={<DeleteIcon />}
+                  colorScheme="red"
+                  variant="outline"
+                />
+              </DeleteClassButton>
+              <IconButton
+                size="sm"
+                icon={<ExternalLinkIcon />}
+                variant="outline"
+                colorScheme="blue"
+                mt={2}
+              />
+            </Box>
+          )
+        },
+      },
     ],
     []
   )
-  // const data = React.useMemo(
-  //   () => list.map((c) => ({ ...c.extendedProps, id: c.id } ?? {})),
-  //   [list]
-  // )
-  const data = list
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
       { columns, data },
@@ -136,67 +187,6 @@ export default function ClassList({
       useRowSelect,
       useSticky,
       (hooks) => {
-        hooks.allColumns.push((columns) => [
-          // Let's make a column for selection
-          {
-            id: 'selection',
-            disableResizing: true,
-            sticky: 'left',
-            minWidth: 35,
-            width: 35,
-            maxWidth: 35,
-            hidden: true,
-            // The header can use the table's getToggleAllRowsSelectedProps method
-            // to render a checkbox
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <Box pl={3}>
-                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-              </Box>
-            ),
-            // The cell can use the individual row's getToggleRowSelectedProps method
-            // to the render a checkbox
-            Cell: ({ row }) => (
-              <Flex h="full" align="center">
-                <Box bgColor={row.original.color} h="full" w={1} mr={2} />
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-              </Flex>
-            ),
-          },
-          ...columns,
-          {
-            Header: '',
-            id: 'operations',
-            accessor: 'id',
-            disableResizing: true,
-            width: 32,
-            Cell: ({ value: id, row }) => {
-              return (
-                <Box>
-                  <DeleteClassButton
-                    deleteClass={deleteClass}
-                    id={id}
-                    title={row.original.title}
-                  >
-                    <IconButton
-                      size="sm"
-                      title="Delete Class"
-                      icon={<DeleteIcon />}
-                      colorScheme="red"
-                      variant="outline"
-                    />
-                  </DeleteClassButton>
-                  <IconButton
-                    size="sm"
-                    icon={<ExternalLinkIcon />}
-                    variant="outline"
-                    colorScheme="blue"
-                    mt={2}
-                  />
-                </Box>
-              )
-            },
-          },
-        ])
         hooks.useInstanceBeforeDimensions.push(({ headerGroups }) => {
           // fix the parent group of the selection button to not be resizable
           const selectionGroupHeader = headerGroups[0].headers[0]
