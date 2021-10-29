@@ -9,5 +9,5 @@ export const useSetting = createChromeStorageStateHookLocal(
   INITIAL_VALUE
 )
 
-export const useTabIndex = createChromeStorageStateHookLocal('tabIndex', 1)
+export const useTabIndex = createChromeStorageStateHookLocal('tabIndex', 0)
 export const useSemester = createChromeStorageStateHookLocal('semester', 'S22')
